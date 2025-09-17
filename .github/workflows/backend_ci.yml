@@ -126,7 +126,11 @@ jobs:
 
     # Login to Azure Container Registry (ACR)
     - name: Login to Azure Container Registry
-      run: az acr login --name ${{ env.ACR_LOGIN_SERVER }}
+      run: |
+        echo "ACR_LOGIN_SERVER value: ${{ env.ACR_LOGIN_SERVER }}"
+        az acr login --name $(echo "${{ env.ACR_LOGIN_SERVER }}" | sed 's/\..*//')
+      env:
+        ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
 
     # Build and Push Docker image for Product Service
     - name: Build and Push Product Service Image
